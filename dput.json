@@ -1,0 +1,8 @@
+{
+    "fqdn": "REPOSITORY",
+    "incoming": "/incoming",
+    "login": "upload",
+    "meta": "boring",
+    "method": "sftp",
+    "allow_unsigned_uploads": true
+}

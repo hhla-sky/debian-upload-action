@@ -1,0 +1,29 @@
+name: Upload to Debian Repository
+description: Upload a debian package to a debian repository using dput-ng
+inputs:
+  ssh-private-key:
+    description: SSH private key for connecting via sftp
+    required: true
+  debian-repository:
+    description: Domain of the Debian repository
+    required: true
+  working-directory:
+    description: Working directory
+    requiired: true
+  changes-file:
+    description: Name of the changes file
+    required: true
+runs:
+  using: "composite"
+  steps:
+    - name: Register SSH Key with SSH Agent
+      uses: webfactory/ssh-agent@v0.8.0
+      with:
+        ssh-private-key: ${{inputs.ssh-private-key}}
+    - name: Add dput-ng config file
+      run: sed "s/REPOSITORY/${{input.debian-repository}}/" dput.json > /etc/dput.d/profiles/upload-action.json
+    - name: Add Debian Repository SSH Host Key to Known Hosts
+      run: ssh-keyscan ${{input.debian-repository}} >> /etc/ssh/ssh_known_hosts
+    - name: Upload Debian Package to Repository
+      working-directory: ${{input.working-directory}}
+      run: dput upload-action ${{input.changes-file}}
