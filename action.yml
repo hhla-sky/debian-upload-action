@@ -22,7 +22,7 @@ runs:
         ssh-private-key: ${{inputs.ssh-private-key}}
     - name: Add dput-ng config file
       shell: bash
-      run: sed "s/REPOSITORY/${{inputs.debian-repository}}/" dput.json > /etc/dput.d/profiles/upload-action.json
+      run: sed "s/REPOSITORY/${{inputs.debian-repository}}/" "${{github.action_path}}/dput.json > /etc/dput.d/profiles/upload-action.json
     - name: Add Debian Repository SSH Host Key to Known Hosts
       shell: bash
       run: ssh-keyscan ${{inputs.debian-repository}} >> /etc/ssh/ssh_known_hosts
