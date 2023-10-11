@@ -20,9 +20,14 @@ runs:
       uses: webfactory/ssh-agent@v0.8.0
       with:
         ssh-private-key: ${{inputs.ssh-private-key}}
+    - name: List files
+      shell: bash
+      working-directory: ${{github.action_path}}
+      run: ls
     - name: Add dput-ng config file
       shell: bash
-      run: sed "s/REPOSITORY/${{inputs.debian-repository}}/" "${{github.action_path}}/dput.json" > /etc/dput.d/profiles/upload-action.json
+      working-directory: ${{github.action_path}}
+      run: sed "s/REPOSITORY/${{inputs.debian-repository}}/" dput.json > /etc/dput.d/profiles/upload-action.json
     - name: Add Debian Repository SSH Host Key to Known Hosts
       shell: bash
       run: ssh-keyscan ${{inputs.debian-repository}} >> /etc/ssh/ssh_known_hosts
